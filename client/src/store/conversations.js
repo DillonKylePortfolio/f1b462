@@ -67,12 +67,24 @@ export const addConversation = (recipientId, newMessage) => {
   };
 };
 
+// sorts messages within each conversation passed
+const sortedConversations = (convos) => {
+  convos.forEach(convo => {
+    let newMessageArray = [];
+    for(let i = convo.messages.length - 1; i >= 0; i--) {
+      newMessageArray.push(convo.messages[i]);
+    }
+    convo.messages = newMessageArray;
+  })
+  return convos;
+}
+
 // REDUCER
 
 const reducer = (state = [], action) => {
   switch (action.type) {
     case GET_CONVERSATIONS:
-      return action.conversations;
+      return sortedConversations(action.conversations);
     case SET_MESSAGE:
       return addMessageToStore(state, action.payload);
     case ADD_ONLINE_USER: {
