@@ -84,7 +84,7 @@ const sortConversations = (convos) => {
 const reducer = (state = [], action) => {
   switch (action.type) {
     case GET_CONVERSATIONS:
-      return sortedConversations(action.conversations);
+      return sortConversations(action.conversations);
     case SET_MESSAGE:
       return addMessageToStore(state, action.payload);
     case ADD_ONLINE_USER: {
