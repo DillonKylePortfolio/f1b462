@@ -67,15 +67,17 @@ export const addConversation = (recipientId, newMessage) => {
   };
 };
 
-// sorts messages within each conversation passed
+// sorts messages by reversing their original order
 const sortedConversations = (convos) => {
-  convos.forEach(convo => {
-    let newMessageArray = [];
-    for(let i = convo.messages.length - 1; i >= 0; i--) {
-      newMessageArray.push(convo.messages[i]);
+  convos.forEach((convo) => {
+    if (convo.messages.length > 0) {
+      let newMessageArray = [];
+      for (let i = convo.messages.length - 1; i >= 0; i--) {
+        newMessageArray.push(convo.messages[i]);
+      }
+      convo.messages = newMessageArray;
     }
-    convo.messages = newMessageArray;
-  })
+  });
   return convos;
 }
 
