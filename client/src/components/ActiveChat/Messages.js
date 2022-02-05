@@ -7,7 +7,7 @@ const Messages = (props) => {
   const { messages, otherUser, userId } = props;
 
   const sortConversation = (conversation) => {
-    if(conversation[0] && conversation[0].id > conversation.at(-1).id) {
+    if(conversation && conversation[0] && conversation[0].id > conversation.at(-1).id) {
       return conversation.reverse()
     } else {
       return conversation
