@@ -1,19 +1,45 @@
 import React, { useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   Grid,
-  Box,
   Typography,
   Button,
   FormControl,
+  InputLabel,
   TextField,
   FormHelperText,
+  makeStyles,
+  Hidden,
 } from "@material-ui/core";
+import {
+  createAccountMessage,
+  endCapRegister,
+  inputContainer,
+  fillContainer,
+  offsetForm,
+  preLoginInputSquished,
+  inputLabel,
+  blueButton,
+  alignCenter,
+} from './loginRegStyle'
 import { register } from "./store/utils/thunkCreators";
+import TopNav from "./TopNav";
+
+const useStyles = makeStyles({
+  createAccountMessage,
+  endCapRegister,
+  inputContainer,
+  fillContainer,
+  offsetForm,
+  preLoginInputSquished,
+  inputLabel,
+  blueButton,
+  alignCenter,
+});
 
 const Login = (props) => {
-  const history = useHistory();
+  const classes = useStyles();
   const { user, register } = props;
   const [formErrorMessage, setFormErrorMessage] = useState({});
 
@@ -37,19 +63,23 @@ const Login = (props) => {
   }
 
   return (
-    <Grid container justify="center">
-      <Box>
-        <Grid container item>
-          <Typography>Need to log in?</Typography>
-          <Button onClick={() => history.push("/login")}>Login</Button>
-        </Grid>
-        <form onSubmit={handleRegister}>
+    <Grid container  
+      direction="column"
+      justifyContent="space-between"
+      className={classes.fillContainer}>
+
+      <TopNav whiteButtonText="Login" softTextText="Already have an account?" pushTo="/login"/>
+
+      <Grid item className={classes.inputContainer}>
+        <form onSubmit={handleRegister} className={classes.offsetForm}>
+          <Typography className={classes.createAccountMessage}>Create an account.</Typography>
+
           <Grid>
             <Grid>
-              <FormControl>
+              <FormControl className={classes.preLoginInputSquished}>
+                <InputLabel aria-label="username label" className={classes.inputLabel}>Username</InputLabel>
                 <TextField
                   aria-label="username"
-                  label="Username"
                   name="username"
                   type="text"
                   required
@@ -57,10 +87,10 @@ const Login = (props) => {
               </FormControl>
             </Grid>
             <Grid>
-              <FormControl>
+              <FormControl className={classes.preLoginInputSquished}>
+                <InputLabel aria-label="email label" className={classes.inputLabel}>E-mail address</InputLabel>
                 <TextField
-                  label="E-mail address"
-                  aria-label="e-mail address"
+                  aria-label="email"
                   type="email"
                   name="email"
                   required
@@ -68,10 +98,11 @@ const Login = (props) => {
               </FormControl>
             </Grid>
             <Grid>
-              <FormControl error={!!formErrorMessage.confirmPassword}>
+              <FormControl className={classes.preLoginInputSquished}
+                error={!!formErrorMessage.confirmPassword}>
+                <InputLabel aria-label="password label" className={classes.inputLabel}>Password</InputLabel>
                 <TextField
                   aria-label="password"
-                  label="Password"
                   type="password"
                   inputProps={{ minLength: 6 }}
                   name="password"
@@ -81,28 +112,38 @@ const Login = (props) => {
                   {formErrorMessage.confirmPassword}
                 </FormHelperText>
               </FormControl>
+                <FormControl className={classes.preLoginInputSquished}
+                  error={!!formErrorMessage.confirmPassword}>
+                  <InputLabel aria-label="confirm password label" className={classes.inputLabel}>Confirm Password</InputLabel>
+                  <TextField
+                    aria-label="confirm password"
+                    type="password"
+                    inputProps={{ minLength: 6 }}
+                    name="confirmPassword"
+                    required
+                  />
+                  <FormHelperText>
+                    {formErrorMessage.confirmPassword}
+                  </FormHelperText>
+                </FormControl>
             </Grid>
-            <Grid>
-              <FormControl error={!!formErrorMessage.confirmPassword}>
-                <TextField
-                  label="Confirm Password"
-                  aria-label="confirm password"
-                  type="password"
-                  inputProps={{ minLength: 6 }}
-                  name="confirmPassword"
-                  required
-                />
-                <FormHelperText>
-                  {formErrorMessage.confirmPassword}
-                </FormHelperText>
-              </FormControl>
+
+            <Grid item className={classes.alignCenter}>
+              <Button type="submit" className={classes.blueButton} variant="contained" aria-label="create account">
+                Create
+              </Button>
             </Grid>
-            <Button type="submit" variant="contained" size="large">
-              Create
-            </Button>
           </Grid>
         </form>
-      </Box>
+
+      </Grid>
+
+      <Hidden smDown>
+        <Grid item className={classes.endCapRegister}></Grid>
+      </Hidden>
+      <Hidden mdUp>
+        <Grid item className={classes.endCapRegisterSmall}></Grid>
+      </Hidden>
     </Grid>
   );
 };
