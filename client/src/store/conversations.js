@@ -67,24 +67,12 @@ export const addConversation = (recipientId, newMessage) => {
   };
 };
 
-// reverse message order if message.ids are in decending (wrong) order
-const sortConversations = (convos) => {
-  return convos.map(convo => {
-    if(convo.messages && convo.messages[0].id > convo.messages.at(-1).id) {
-      return {
-        ...convo,
-        messages: convo.messages.reverse()
-      }
-    } else return convo
-  })
-};
-
 // REDUCER
 
 const reducer = (state = [], action) => {
   switch (action.type) {
     case GET_CONVERSATIONS:
-      return sortConversations(action.conversations);
+      return action.conversations;
     case SET_MESSAGE:
       return addMessageToStore(state, action.payload);
     case ADD_ONLINE_USER: {
