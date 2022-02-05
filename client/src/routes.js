@@ -5,7 +5,7 @@ import { fetchUser } from "./store/utils/thunkCreators";
 import Signup from "./Signup.js";
 import Login from "./Login.js";
 import { Home, SnackbarError } from "./components";
-import BeforeLogin from "./BeforeLogin";
+import SidebarImage from "./SidebarImage";
 
 const Routes = (props) => {
   const { user, fetchUser } = props;
@@ -43,15 +43,15 @@ const Routes = (props) => {
       )}
       <Switch>
         <Route path="/login">
-          <BeforeLogin inputs={Login}/>
+          <SidebarImage inputs={Login}/>
         </Route>
         <Route path="/register">
-          <BeforeLogin inputs={Signup}/>
+          <SidebarImage inputs={Signup}/>
         </Route>
         <Route
           exact
           path="/"
-          render={(props) => (props.user?.id ? <Home /> : <BeforeLogin inputs={Signup}/>)}
+          render={(props) => (props.user?.id ? <Home /> : <SidebarImage inputs={Signup}/>)}
         />
         <Route path="/home" component={Home} />
       </Switch>

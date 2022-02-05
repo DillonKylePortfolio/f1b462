@@ -64,7 +64,7 @@ const useStyles = makeStyles({
   }
 })
 
-function BeforeLogin(props) {
+function SidebarImage(props) {
   const classes = useStyles();
   
   return <div className={classes.root}>
@@ -91,4 +91,4 @@ function BeforeLogin(props) {
   </div>;
 }
 
-export default BeforeLogin;
+export default SidebarImage;
