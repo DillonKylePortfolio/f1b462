@@ -98,8 +98,6 @@ const Input = (props) => {
         const response = await instance.post('https://api.cloudinary.com/v1_1/hatchypicturesticket/image/upload', data);
         responseArray.push(response.data.secure_url);
       };
-
-      console.log(responseArray);
       photoUrls.current = responseArray;
     }
   };
