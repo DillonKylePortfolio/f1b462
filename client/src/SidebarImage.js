@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from "@material-ui/core";
 import backgroundImage from './assets/bg-img.png';
 import bubble from './assets/bubble.svg';
+import LoginOrReg from './LoginOrReg';
 
 const useStyles = makeStyles({
   root: {
@@ -66,13 +67,14 @@ const useStyles = makeStyles({
 
 function SidebarImage(props) {
   const classes = useStyles();
+  const { content } = props;
   
-  return <div className={classes.root}>
+  return <Grid className={classes.root}>
     <Grid container spacing={0} className={classes.gridContainer}>
       <Grid item xs={0} sm={6} md={5} className={classes.imageContainer}>
-        <div className={classes.imageStretch}></div>
+        <Grid className={classes.imageStretch} />
         <img src={backgroundImage} className={classes.bgImage} alt="background"/>
-        <div className={classes.sidebarGradient}></div>
+        <Grid className={classes.sidebarGradient} />
         <Grid container direction="column" className={classes.sidebarContent}>
           <Grid item>
             <img src={bubble} className={classes.bubbleImage} alt="message bubble"/>
@@ -85,10 +87,10 @@ function SidebarImage(props) {
         </Grid>
       </Grid>
       <Grid item xs={12} sm={6} md={7} className={classes.inputSection}>
-        <props.inputs/>
+        <LoginOrReg content={content} />
       </Grid>
     </Grid>
-  </div>;
+  </Grid>;
 }
 
 export default SidebarImage;
