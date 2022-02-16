@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, Typography, Paper } from "@material-ui/core";
+import { Box, Typography, Paper, Grid } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -24,6 +24,9 @@ const useStyles = makeStyles(() => ({
   bubble: {
     background: "#F4F6FA",
     borderRadius: "10px 10px 0 10px",
+    textAlign: "right",
+    width: "max-content",
+    marginLeft: "auto",
   },
   attachmentsBox: {
     display: "flex",
@@ -42,6 +45,14 @@ const useStyles = makeStyles(() => ({
     height: "10rem",
     overflow: "hidden",
     borderRadius: "1rem",
+    marginLeft: "auto",
+  },
+  attachmentsPaperSmall: {
+    width: "7rem",
+    height: "5rem",
+    overflow: "hidden",
+    borderRadius: "0.5rem",
+    marginLeft: "0.75rem",
   },
 }));
 
@@ -51,8 +62,13 @@ const SenderBubble = (props) => {
   return (
     <Box className={classes.root}>
       <Typography className={classes.date}>{time}</Typography>
-      <div className={classes.paperContainer}>
-        { attachments && attachments.length > 0 && 
+      <Grid className={classes.paperContainer}>
+        { text !== "" && 
+          <Box className={classes.bubble}>
+            <Typography className={classes.text}>{text}</Typography>
+          </Box>
+        }
+        { attachments && attachments.length === 1 && 
           <Box className={classes.attachmentsBox}>
             { attachments.map(photoUrl => {
               return (
@@ -66,12 +82,21 @@ const SenderBubble = (props) => {
             })}
           </Box>
         }
-        { text !== "" && 
-          <Box className={classes.bubble}>
-            <Typography className={classes.text}>{text}</Typography>
+        { attachments && attachments.length > 1 && 
+          <Box className={classes.attachmentsBox}>
+            { attachments.map(photoUrl => {
+              return (
+                <Paper variant="outlined" key={photoUrl} className={classes.attachmentsPaperSmall}>
+                  <img src={photoUrl} 
+                  className={classes.imageThumbnail} 
+                  alt="thumbnail of sent"
+                  aria-label="thumbnail of sent"/>
+                </Paper>
+              )
+            })}
           </Box>
         }
-      </div>
+      </Grid>
     </Box>
   );
 };

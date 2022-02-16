@@ -1,9 +1,10 @@
 import React, { useState, useRef } from "react";
-import { FormControl, FilledInput, Button } from "@material-ui/core";
+import { FormControl, FilledInput, Button, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { postMessage } from "../../store/utils/thunkCreators";
 import AttachFileIcon from '@material-ui/icons/AttachFile';
+import axios from "axios";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -37,19 +38,20 @@ const useStyles = makeStyles(() => ({
   chooseFilesButton: {
     border: "solid 1px #adadad",
     backgroundColor: "rgba(255,255,255, 0.9)",
-    padding: "0.5rem",
+    padding: "1rem",
     borderRadius: "0.15rem",
     overflow: "hidden",
+
   },
   photoForm: {
     position: "absolute",
-    top: "-8rem",
+    top: "-8.5rem",
     right: "1rem",
   },
   sendButton: {
     position: "absolute",
     right: "0.5rem",
-    top: "0.5rem",
+    top: "0.75rem"
   },
 }));
 
@@ -82,32 +84,28 @@ const Input = (props) => {
     }
   };
 
-  const handleUpload = (e) => {
+  const handleUpload = async (e) => {
     e.preventDefault();
-    if(imageUrlInput.current.files && imageUrlInput.current.files.length === 1) {
-      const file = imageUrlInput.current.files[0];
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "zm201ktq");
-      const OPTIONS = {
-        method: "POST",
-        body: formData
-      }
-      fetch("https://api.cloudinary.com/v1_1/hatchypicturesticket/image/upload", OPTIONS)
-      .then(response => response.json())
-      .then(json => {
-        setPhotoUrl(json);
-      })  
+    let files = imageUrlInput.current.files;
+    let responseArray = [];
+    if(imageUrlInput.current.files && files.length > 0) {
+      const instance = axios.create();
+      const data = new FormData();
+      for(let i = 0; i < files.length; i++) {
+        let file = files[i];
+        data.append("file", file);
+        data.append("upload_preset", process.env.REACT_APP_UPLOAD_PRESET);
+        const response = await instance.post('https://api.cloudinary.com/v1_1/hatchypicturesticket/image/upload', data);
+        responseArray.push(response.data.secure_url);
+      };
+
+      console.log(responseArray);
+      photoUrls.current = responseArray;
     }
   };
 
-  const setPhotoUrl = (response) => {
-    photoUrls.current = [...photoUrls.current, response.secure_url];
-    console.log(photoUrls.current);
-  };
-
   return (
-    <div className={classes.inputAnchor}>
+    <Grid className={classes.inputAnchor}>
       <form className={classes.root} onSubmit={handleSubmit}>
         <FormControl fullWidth hiddenLabel>
           <FilledInput
@@ -120,18 +118,18 @@ const Input = (props) => {
           />
         </FormControl>
       </form>
-      <div className={classes.attatchFileContainer}>
+      <Grid className={classes.attatchFileContainer}>
         <Button size="small" onClick={() => setModalOpen(previousState => !previousState)} className={classes.attachFileButton} arial-label="attach image button">
           <AttachFileIcon className={classes.paperClipIcon} alt="attach file icon"/>
         </Button>
         { modalOpen && (
-          <form type="submit" onSubmit={(e) => handleUpload(e)} className={classes.photoForm}>
-            <input ref={imageUrlInput} type="file" accept="image/png, image/jpg" className={classes.chooseFilesButton}/>
-            <button className={classes.sendButton}>Upload</button>
-          </form>
+          <FormControl className={classes.photoForm}>
+            <input type="file" ref={imageUrlInput} multiple accept="image/png, image/jpg" className={classes.chooseFilesButton} />
+            <Button size="small" variant="contained" color="primary" className={classes.sendButton} onClick={(e) => handleUpload(e)}>Upload</Button>
+          </FormControl>
         )}
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 };
 
